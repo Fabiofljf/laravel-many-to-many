@@ -10,6 +10,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request; // 👈 Import the Request class
 use Illuminate\Support\Facades\Auth; // 👈 Import the Validation Rule class
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -64,6 +65,17 @@ class PostController extends Controller
         // assign the post to the authenticated user
         $val_data['user_id'] = Auth::id();
 
+        // Verifico se la richiesta contiene un file (1°metodo)
+        if(array_key_exists('cover_image', $request->all())){
+            // Valido il file
+            $request->validated([
+                "cover_image" => "nullable|image|max:5"
+            ]);
+            // Salvo nel filesystem
+            $path = Storage::put('post_images', $request->cover_image);
+            // passo il percorso all'array di dati validati per salvare la risorsa
+            $val_data['cover_image'] = $path;
+        }
         // create the resource
         $new_post = Post::create($val_data);
         $new_post->tags()->attach($request->tags);
@@ -121,6 +133,20 @@ class PostController extends Controller
             'content' => 'nullable',
         ]);
 
+        // verificare se la richiesta contiene un file (2°metodo)
+        if ($request->hasFile('cover_image')) {
+            // validare il file
+            $request->validate([
+                'cover_image' => 'nullable|image|max:300'
+            ]);
+            // salvo il file nel filesystem
+            // recupero il percorso
+            //ddd($request->all());
+            $path = Storage::put('post_images', $request->cover_image);
+            // passo il percorso all'array di dati validati per salvare la risorsa
+            $val_data['cover_image'] = $path;
+        }
+
         //dd($val_data);
         // Gererate the slug
         $slug = Post::generateSlug($request->title);
@@ -143,7 +169,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        // elimino l'immagine vecchia
+        Storage::delete($post->cover_image);
+        //elimino la risorsa
 
         $post->delete();
 
