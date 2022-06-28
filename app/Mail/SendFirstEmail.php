@@ -33,7 +33,7 @@ class SendFirstEmail extends Mailable
         ->markdown('mail.markdown.admin-SendFirstEmail')
         ->with([
             'post->slug' => '$this->post->slug',
-            'post->url' => env('APP_URL') . '/posts/' . '$this->post->slug',
+            'post->url' => env('APP_URL') . '/posts/' . $this->post->slug,
         ]);
     }
 }

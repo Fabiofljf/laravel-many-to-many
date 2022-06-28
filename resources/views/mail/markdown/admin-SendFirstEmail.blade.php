@@ -3,7 +3,7 @@
 
 Ciao ! Il tuoi post è stato modificato, ricevi quest'email di conferma.
 
-@component('mail::button', ['url' => '$post->slug'])
+@component('mail::button', ['url' => ''])
 Button Text
 @endcomponent
 

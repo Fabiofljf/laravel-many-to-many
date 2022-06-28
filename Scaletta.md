@@ -18,4 +18,4 @@
 4. Creo la relativa view da restituire nella funzione build(). Questa view corrisponde al contenuto dell'email da inviare. Nella view possiamo usare Plain Text, Blade o Markdown.
 5. Modifico componente dell'url in views\mian ['url' => '$post->slug']);
 6. Modifico il controller con return e l'istanza dell'email;
-7. Modifico la rotta
+7. Modifico la rotta;
