@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
+use App\Mail\SendFirstEmail;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,12 @@ Route::middleware('auth')->prefix('admin')->namespace('Admin')->name('admin.')->
     )->parameters([
         'tags' => 'tag:slug',
     ])->except(['show', 'create', 'edit']);
+});
+
+// - findOrFail() prende un id e restituisce un singolo modello. Se non esiste un modello corrispondente, viene generato un errore 
+Route::get('mailable', function(){
+    $post = Post::findOrFail(1);
+    return new SendFirstEmail($post);
 });
 
 // inseriamola come ultima rotta

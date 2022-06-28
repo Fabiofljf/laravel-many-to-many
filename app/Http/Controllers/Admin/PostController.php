@@ -11,6 +11,8 @@ use Illuminate\Http\Request; // 👈 Import the Request class
 use Illuminate\Support\Facades\Auth; // 👈 Import the Validation Rule class
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendFirstEmail;
 
 class PostController extends Controller
 {
@@ -157,6 +159,10 @@ class PostController extends Controller
 
         //Sync tags
         $post->tags()->sync($request->tags);
+
+        //return (new SendFirstEmail($post))->render();
+        Mail::to('fabio@fabio.it')->send(new SendFirstEmail($post));
+
         // redirect to get route
         return redirect()->route('admin.posts.index')->with('message', "$post->title updated successfully");
     }
